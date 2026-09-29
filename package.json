@@ -1,12 +1,14 @@
 {
-  "name": "ctw",
+  "name": "custom-tshirt-wala",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "images:generate": "node --experimental-strip-types --no-warnings scripts/generate-placeholder-images.mts"
   },
   "dependencies": {
     "next": "16.3.7",

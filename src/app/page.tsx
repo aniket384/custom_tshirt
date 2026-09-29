@@ -1,69 +1,132 @@
-import Image from "next/image";
+/**
+ * HOMEPAGE (Server Component, statically rendered).
+ *
+ * Section order follows the brief: hero → categories → customise → best
+ * sellers → moments → styles → bulk → personal → fitness → new arrivals →
+ * why us → how it works → Instagram → testimonials → FAQ → final CTA.
+ * Each section is its own component so it can be re-ordered or A/B tested.
+ */
+import type { Metadata } from "next";
+import { Hero } from "@/components/home/Hero";
+import { CategoryQuickNav } from "@/components/home/CategoryQuickNav";
+import { CustomiseFeature } from "@/components/home/CustomiseFeature";
+import { FeatureSplit } from "@/components/home/FeatureSplit";
+import { PersonalFeature } from "@/components/home/PersonalFeature";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { InstagramShowcase } from "@/components/home/InstagramShowcase";
+import { FinalCta } from "@/components/home/FinalCta";
+import { Section } from "@/components/ui/Section";
+import { FAQAccordion } from "@/components/ui/FAQAccordion";
+import { ProductRail } from "@/components/product/ProductGrid";
+import { ReviewSection } from "@/components/product/ReviewSection";
+import { CategoryCard } from "@/components/ecommerce/CategoryCard";
+import { TrustStrip } from "@/components/ecommerce/TrustStrip";
+import { getAllCategories, getBestSellers, getNewArrivals } from "@/lib/commerce/catalog";
+import { generalFaqs, moments, styles } from "@/data/content";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { siteConfig } from "@/config/site";
 
-export default function Home() {
+export const metadata: Metadata = buildMetadata({
+  title: `${siteConfig.name} — Custom T-Shirts & Personalised Printing | ${siteConfig.tagline}`,
+  description:
+    "Design custom T-shirts with your photo, name or quote, or shop printed, oversized, couple, kids, family, gym and corporate T-shirts and hoodies. Bulk orders and delivery across India.",
+  path: "/",
+  absoluteTitle: true,
+});
+
+export default async function HomePage() {
+  const [categories, bestSellers, newArrivals] = await Promise.all([getAllCategories(), getBestSellers(8), getNewArrivals(8)]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <Hero />
+      <CategoryQuickNav categories={categories} />
+      <CustomiseFeature />
+
+      <Section id="best-sellers" eyebrow="Most picked" title="Best Sellers" action={{ href: "/collections/best-sellers", label: "Shop all best sellers" }}>
+        <ProductRail products={bestSellers} label="Best selling products" />
+      </Section>
+
+      <Section id="moments" eyebrow="Shop by moment" title="For every moment" intro="Birthdays, trips, gym days and team events — find a T-shirt for the occasion." tone="surface">
+        <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+          {moments.map((m) => (
+            <li key={m.href}>
+              <CategoryCard href={m.href} title={m.name} image={m.image} aspect="square" sizes="(min-width: 768px) 31vw, 46vw" />
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section id="styles" eyebrow="Shop by style" title="Find your style" action={{ href: "/collections", label: "All collections" }}>
+        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          {styles.map((s) => (
+            <li key={s.href}>
+              <CategoryCard href={s.href} title={s.name} image={s.image} sizes="(min-width: 768px) 23vw, 46vw" />
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <FeatureSplit
+        id="bulk"
+        tone="dark"
+        eyebrow="Corporate & bulk"
+        title={
+          <>
+            More than
+            <br />
+            <span className="text-brand">just T-shirts.</span>
+          </>
+        }
+        text="Custom apparel for teams, companies, events, colleges and communities."
+        bullets={["Company teams", "Events & runs", "Colleges & fests", "Clubs & communities"]}
+        image={{ src: "/images/home/bulk.webp", alt: "Team T-shirts in navy, white and black with a company logo", width: 1200, height: 900 }}
+        primary={{ href: "/bulk-orders", label: "Request a Bulk Quote" }}
+        secondary={{ href: "/shop/bulk-event-t-shirts", label: "Explore Bulk Orders" }}
+      />
+
+      <Section id="personal" eyebrow="Kids • Family • Couples" title="Make it personal.">
+        <PersonalFeature />
+      </Section>
+
+      <FeatureSplit
+        id="fitness"
+        tone="surface"
+        reverse
+        eyebrow="Gym & fitness"
+        title="Wear your energy."
+        text="Motivation quotes, training graphics and custom tees for your gym, running club or fitness studio."
+        image={{ src: "/images/home/gym.webp", alt: "Black and grey gym T-shirts with motivation quotes", width: 1200, height: 900 }}
+        primary={{ href: "/shop/gym-t-shirts", label: "Shop Fitness T-Shirts" }}
+      />
+
+      <Section id="new-arrivals" eyebrow="Just in" title="New Arrivals" action={{ href: "/collections/new-arrivals", label: "Shop new arrivals" }}>
+        <ProductRail products={newArrivals} label="New arrivals" />
+      </Section>
+
+      <Section id="why-us" eyebrow="Why Custom T-Shirt Wala" title="Made around you" tone="surface">
+        <TrustStrip />
+      </Section>
+
+      <Section id="how-it-works" eyebrow="Custom printing" title="How it works" action={{ href: "/custom-tshirt", label: "Open the customiser" }}>
+        <HowItWorks />
+      </Section>
+
+      <Section id="instagram" eyebrow={siteConfig.social.instagramHandle} title="On Instagram" tone="surface">
+        <InstagramShowcase />
+      </Section>
+
+      <Section id="testimonials" eyebrow="What people say" title="Testimonials">
+        <ReviewSection mode="samples" />
+      </Section>
+
+      <Section id="faq" eyebrow="Questions" title="FAQ" action={{ href: "/faq", label: "All FAQs" }} tone="surface">
+        <div className="max-w-3xl">
+          <FAQAccordion faqs={generalFaqs} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </Section>
+
+      <FinalCta />
+    </>
   );
 }
