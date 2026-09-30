@@ -36,7 +36,9 @@ export function Logo({ tone = "dark", size = "md", withTagline = false, classNam
           alt={siteConfig.name}
           width={px}
           height={px}
-          sizes={`${px}px`}
+          // Fixed-size image → 1x/2x srcset only (no `sizes`). Header logo is
+          // above the fold, so load it eagerly; footer logo stays lazy.
+          loading={size === "lg" ? "lazy" : "eager"}
           className={cn("shrink-0 rounded-full", box)}
         />
       ) : (
