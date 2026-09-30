@@ -36,7 +36,7 @@ export function organizationJsonLd(): Json {
     name: siteConfig.name,
     slogan: siteConfig.tagline,
     url: siteConfig.url,
-    logo: absoluteUrl("/icon.png"),
+    logo: absoluteUrl("/brand/logo-original.jpg"),
     sameAs: [siteConfig.social.instagram],
     // City/region only — no street address has been confirmed.
     address: {

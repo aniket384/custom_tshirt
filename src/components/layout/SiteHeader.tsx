@@ -28,7 +28,7 @@ export async function SiteHeader() {
       <AnnouncementBar />
       <div className="border-b border-line bg-paper/95 backdrop-blur supports-[backdrop-filter]:bg-paper/85">
         <div className="container-page flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
-          <Logo size="md" className="shrink-0 pt-2" />
+          <Logo size="md" className="shrink-0" />
           <DesktopNavigation />
           <HeaderActions searchIndex={searchIndex} />
         </div>

@@ -410,6 +410,9 @@ async function merchandising() {
 }
 
 async function icons() {
+  // Real brand logo present → app icons are derived from it; don't overwrite.
+  const { existsSync } = await import("node:fs");
+  if (existsSync(path.join(ROOT, "public/brand/logo-original.jpg"))) return;
   const iconSvg = (size: number) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#111"/>${crownPath(256, 190, 220, YELLOW)}<text x="256" y="420" text-anchor="middle" font-family="Impact, 'Arial Black', sans-serif" font-size="150" fill="#fff">CTW</text></svg>`;
   await writeFile(path.join(ROOT, "src/app/icon.png"), await sharp(Buffer.from(iconSvg(512))).png({ palette: true, colours: 16 }).toBuffer());

@@ -18,7 +18,7 @@ export function Footer() {
     <footer className="on-dark mt-auto bg-ink text-white">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
         <div>
-          <Logo tone="light" size="md" />
+          <Logo tone="light" size="lg" />
           <p className="mt-4 font-marker text-lg text-brand">{siteConfig.tagline}</p>
           <p className="mt-3 flex items-center gap-2 text-sm text-muted-dark">
             <MapPinIcon size={16} />

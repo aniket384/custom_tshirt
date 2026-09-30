@@ -51,13 +51,13 @@ export const siteConfig = {
   },
 
   /**
-   * Brand logo. Drop the real artwork at /public/brand/logo.svg (or .png) and
-   * set `src` — the <Logo> component switches from the text lockup to the image.
+   * Brand logo (circular badge). Original: /public/brand/logo-original.jpg.
+   * Set `src` to null to fall back to the text lockup in <Logo>.
    */
   logo: {
-    src: null as string | null, // e.g. "/brand/logo.svg"
-    width: 160,
-    height: 48,
+    src: "/brand/logo.webp" as string | null,
+    width: 512,
+    height: 512,
   },
 
   /** Default social share image (1200×630). Replace with real brand art. */
